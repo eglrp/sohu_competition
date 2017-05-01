@@ -2,6 +2,23 @@
 import imghdr
 import os
 from PIL import Image
+import shutil
+
+def copy_dir(path, new_path):
+    items = os.listdir(path)
+    num_pics = len(items)
+    path_copy = new_path
+    try:
+        shutil.copytree(path, path_copy)
+    except Exception, e:
+        print 'Copy failed!'
+        return 0
+    copy_pics = len(os.listdir(path_copy))
+    if num_pics == copy_pics:
+        print "Copy successful!"
+        print "%d pics copys" %(copy_pics)
+    else:
+        print 'Copy failed!'
 
 # delete the broken pics
 def delete_pic(path):
@@ -42,7 +59,7 @@ def rename_pic(path):
             num_nojpeg += 1
     result = [num_jpeg, num_nojpeg]
     if num_total != (result[0] + result[1]):
-        print "renamed failed!"
+        print "Renamed failed!"
         return 0
     print '%d jpeg files and %d not jpeg files' %(num_jpeg, num_nojpeg)
     return result
@@ -66,12 +83,11 @@ def convert_pic(path):
                 Image.open(img_loc).convert('RGB').save(out_pic)
                 os.remove(img_loc)
                 num_remove += 1
-                print "Covert to JPEG successfully!"
+                print "Covert to JPEG successful!"
             except Exception, e:
                 print "This format can not support!", img_loc
 
     print num_remove
-
     if num_nojpeg != num_remove:
         print 'Convert failed!'
         return 0
@@ -88,6 +104,10 @@ def convert_pic(path):
     print "Convert all successfully!"
     print "There are %d jpeg pics now" %(nums)
 
-# change the location, run it
-path_unpre = '/home/johnny/Data/sohu_image_context/data/NewsInfo_6/pic_example'
-convert_pic(path_unpre)
+# set up path_unpre and new_dir, run it!
+path_unpre = '/home/johnny/Data/sohu_image_context/data/NewsInfo_6/image_copy'
+new_dir = 'pic_test'
+gan = path_unpre.rfind('/')
+new_path = path_unpre[:gan+1] + new_dir
+copy_dir(path_unpre, new_path)
+convert_pic(new_path)
