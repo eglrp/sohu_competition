@@ -1,3 +1,3 @@
 # sohu_competition
 Include:
-1. code for pic preprocessing
+1. code for preprocessing£¨pic, text£©
